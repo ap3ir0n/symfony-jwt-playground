@@ -24,12 +24,11 @@ security:
                 failure_handler:          lexik_jwt_authentication.handler.authentication_failure
 
         web_login:
-            pattern:  ^/web/login
+            pattern:  ^/web
             anonymous: true
-            json_login:
-                check_path:               /web/login
-                success_handler:          lexik_jwt_authentication.handler.authentication_success
-                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+            guard:
+                authenticators:
+                    - App\Security\LoginFormAuthenticator
 
         secured_api:
             pattern:   ^/api/secured
