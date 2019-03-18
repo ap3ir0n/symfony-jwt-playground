@@ -18,10 +18,21 @@ use Symfony\Component\Security\Http\Util\TargetPathTrait;
 class JWTTokenAuthenticator extends BaseAuthenticator
 {
     use TargetPathTrait;
+
     /**
      * @var RouterInterface
      */
     private $router;
+
+    /**
+     * @var string
+     */
+    private $webLoginRoute;
+
+    /**
+     * @var string
+     */
+    private $webFirewallName;
 
     /**
      * JWTTokenAuthenticator constructor.
@@ -29,17 +40,23 @@ class JWTTokenAuthenticator extends BaseAuthenticator
      * @param JWTTokenManagerInterface $jwtManager
      * @param EventDispatcherInterface $dispatcher
      * @param TokenExtractorInterface $tokenExtractor
+     * @param string $webLoginRoute
+     * @param string $webFirewallName
      */
     public function __construct(
         RouterInterface $router,
         JWTTokenManagerInterface $jwtManager,
         EventDispatcherInterface $dispatcher,
-        TokenExtractorInterface $tokenExtractor
+        TokenExtractorInterface $tokenExtractor,
+        string $webLoginRoute,
+        string $webFirewallName
     )
     {
         parent::__construct($jwtManager, $dispatcher, $tokenExtractor);
 
         $this->router = $router;
+        $this->webLoginRoute = $webLoginRoute;
+        $this->webFirewallName = $webFirewallName;
     }
 
     public function supports(Request $request)
@@ -67,10 +84,10 @@ class JWTTokenAuthenticator extends BaseAuthenticator
     {
         $this->saveTargetPath(
             $request->getSession(),
-            'jwt_provider',
+            $this->webFirewallName,
             $request->getUri()
         );
 
-        return new RedirectResponse($this->router->generate('web_login_check'));
+        return new RedirectResponse($this->router->generate($this->webLoginRoute));
     }
 }

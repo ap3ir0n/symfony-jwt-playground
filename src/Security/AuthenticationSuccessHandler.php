@@ -39,26 +39,35 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
      * @var RouterInterface
      */
     protected $router;
-
     /**
      * @var string
      */
-    protected $providerKey = 'jwt_provider';
+    private $webFirewallName;
+    /**
+     * @var string
+     */
+    private $webDefaultRoute;
 
     /**
      * @param JWTTokenManagerInterface $jwtManager
      * @param EventDispatcherInterface $dispatcher
      * @param RouterInterface $router
+     * @param string $webFirewallName
+     * @param string $webDefaultRoute
      */
     public function __construct(
         JWTTokenManagerInterface $jwtManager,
         EventDispatcherInterface $dispatcher,
-        RouterInterface $router
+        RouterInterface $router,
+        string $webFirewallName,
+        string $webDefaultRoute
     )
     {
         $this->jwtManager = $jwtManager;
         $this->dispatcher = $dispatcher;
         $this->router = $router;
+        $this->webFirewallName = $webFirewallName;
+        $this->webDefaultRoute = $webDefaultRoute;
     }
 
     /**
@@ -66,10 +75,13 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
-        $jwt = $this->jwtManager->create($user = $token->getUser());
+        /** @var UserInterface $user */
+        $user = $token->getUser();
 
-        $targetPath = $this->getTargetPath($request->getSession(), $this->providerKey) ??
-            $this->router->generate('web_index');
+        $jwt = $this->jwtManager->create($user);
+
+        $targetPath = $this->getTargetPath($request->getSession(), $this->webFirewallName) ??
+            $this->router->generate($this->webDefaultRoute);
 
         $response = new RedirectResponse($targetPath);
         $event    = new AuthenticationSuccessEvent(['token' => $jwt], $user, $response);
