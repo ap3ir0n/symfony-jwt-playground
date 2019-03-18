@@ -24,11 +24,11 @@ class WebController extends AbstractController
 
     public function securedAction(Request $request)
     {
-        return Response::create('<h1>Secured route</h1>');
+        return Response::create('<body><h1>Secured route</h1></body>');
     }
 
     public function unsecuredAction(Request $request)
     {
-        return Response::create('<h1>Unsecured route</h1>');
+        return Response::create('<body><h1>Unsecured route</h1></body>');
     }
 }
