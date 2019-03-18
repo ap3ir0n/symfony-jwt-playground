@@ -1,2 +1,22 @@
 api_login_check:
   path: /api/login_check
+
+api_secured:
+  path:       /api/secured
+  controller: App\Controller\ApiController::securedAction
+  methods:    GET
+
+api_unsecured:
+  path:       /api/unsecured
+  controller: App\Controller\ApiController::unsecuredAction
+  methods:    GET
+  
+web_secured:
+  path:       /web/secured
+  controller: App\Controller\WebController::securedAction
+  methods:    GET
+
+web_unsecured:
+  path:       /web/unsecured
+  controller: App\Controller\WebController::unsecuredAction
+  methods:    GET
