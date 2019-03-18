@@ -14,12 +14,20 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        login:
+        api_login:
             pattern:  ^/api/login
             stateless: true
             anonymous: true
             json_login:
                 check_path:               /api/login
+                success_handler:          lexik_jwt_authentication.handler.authentication_success
+                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+
+        web_login:
+            pattern:  ^/web/login
+            anonymous: true
+            json_login:
+                check_path:               /web/login
                 success_handler:          lexik_jwt_authentication.handler.authentication_success
                 failure_handler:          lexik_jwt_authentication.handler.authentication_failure
 
