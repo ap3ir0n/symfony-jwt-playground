@@ -24,7 +24,7 @@ security:
                 failure_handler:          lexik_jwt_authentication.handler.authentication_failure
 
         web_login:
-            pattern:  ^/web
+            pattern:  ^/web/login
             anonymous: true
             guard:
                 authenticators:
@@ -36,6 +36,7 @@ security:
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
+
         secured_web:
             pattern:   ^/web/secured
             stateless: true

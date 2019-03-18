@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Security;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,16 +44,27 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
      */
     private $userProvider;
 
+    /**
+     * @var JWTTokenManagerInterface
+     */
+    private $tockenManager;
+    /**
+     * @var JWTTokenManagerInterface
+     */
+    private $tokenManager;
+
     public function __construct(
         UserProviderInterface $userProvider,
         RouterInterface $router,
         CsrfTokenManagerInterface $csrfTokenManager,
-        UserPasswordEncoderInterface $passwordEncoder
+        UserPasswordEncoderInterface $passwordEncoder,
+        JWTTokenManagerInterface $tokenManager
     ) {
         $this->router = $router;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->passwordEncoder = $passwordEncoder;
         $this->userProvider = $userProvider;
+        $this->tokenManager = $tokenManager;
     }
 
     public function supports(Request $request)
@@ -99,11 +112,15 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
-        if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
-            return new RedirectResponse($targetPath);
-        }
+        $targetPath = $this->getTargetPath($request->getSession(), $providerKey) ?? $this->getLoginUrl();
 
-        return new RedirectResponse($this->router->generate('web_secured'));
+        $response = new RedirectResponse($targetPath);
+
+        $response->headers->setCookie(new Cookie(
+            'jwt', $this->tockenManager->create($token->getUser())
+        ));
+
+        return $response;
     }
 
     protected function getLoginUrl()
