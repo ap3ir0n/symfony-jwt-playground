@@ -22,13 +22,23 @@ class WebController extends AbstractController
         ]);
     }
 
-    public function securedAction(Request $request)
+    public function securedOneAction(Request $request)
     {
-        return Response::create('<body><h1>Secured route</h1></body>');
+        return Response::create('<body><h1>Secured route #1</h1></body>');
+    }
+
+    public function securedTwoAction(Request $request)
+    {
+        return Response::create('<body><h1>Secured route #2</h1></body>');
     }
 
     public function unsecuredAction(Request $request)
     {
         return Response::create('<body><h1>Unsecured route</h1></body>');
+    }
+
+    public function indexAction(Request $request)
+    {
+        return Response::create('<body><h1>Index</h1></body>');
     }
 }

@@ -11,14 +11,24 @@ api_unsecured:
   controller: App\Controller\ApiController::unsecuredAction
   methods:    GET
   
-web_secured:
-  path:       /web/secured
-  controller: App\Controller\WebController::securedAction
+web_secured_1:
+  path:       /web/secured-1
+  controller: App\Controller\WebController::securedOneAction
+  methods:    GET
+
+web_secured_2:
+  path:       /web/secured-2
+  controller: App\Controller\WebController::securedTwoAction
   methods:    GET
 
 web_unsecured:
   path:       /web/unsecured
   controller: App\Controller\WebController::unsecuredAction
+  methods:    GET
+
+web_index:
+  path:       /web
+  controller: App\Controller\WebController::indexAction
   methods:    GET
 
 web_login_check:

@@ -14,6 +14,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 /**
  * AuthenticationSuccessHandler.
@@ -22,6 +23,8 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerI
  */
 class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterface
 {
+    use TargetPathTrait;
+
     /**
      * @var JWTManager
      */
@@ -36,6 +39,11 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
      * @var RouterInterface
      */
     protected $router;
+
+    /**
+     * @var string
+     */
+    protected $providerKey = 'jwt_provider';
 
     /**
      * @param JWTTokenManagerInterface $jwtManager
@@ -58,14 +66,12 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
-        return $this->handleAuthenticationSuccess($token->getUser());
-    }
+        $jwt = $this->jwtManager->create($user = $token->getUser());
 
-    public function handleAuthenticationSuccess(UserInterface $user)
-    {
-        $jwt = $this->jwtManager->create($user);
+        $targetPath = $this->getTargetPath($request->getSession(), $this->providerKey) ??
+            $this->router->generate('web_index');
 
-        $response = new RedirectResponse($this->router->generate('web_secured'));
+        $response = new RedirectResponse($targetPath);
         $event    = new AuthenticationSuccessEvent(['token' => $jwt], $user, $response);
 
         $this->dispatcher->dispatch(Events::AUTHENTICATION_SUCCESS, $event);

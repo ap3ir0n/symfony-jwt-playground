@@ -13,9 +13,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class JWTTokenAuthenticator extends BaseAuthenticator
 {
+    use TargetPathTrait;
     /**
      * @var RouterInterface
      */
@@ -58,11 +60,17 @@ class JWTTokenAuthenticator extends BaseAuthenticator
 
     public function start(Request $request, AuthenticationException $authException = null)
     {
-        return $this->redirectToLoginPage();
+        return $this->redirectToLoginPage($request);
     }
 
-    private function redirectToLoginPage(): Response
+    private function redirectToLoginPage(Request $request): Response
     {
+        $this->saveTargetPath(
+            $request->getSession(),
+            'jwt_provider',
+            $request->getUri()
+        );
+
         return new RedirectResponse($this->router->generate('web_login_check'));
     }
 }
