@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Security\Http\Authentication;
+namespace App\Security;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
-use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationSuccessResponse;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -62,11 +61,9 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         return $this->handleAuthenticationSuccess($token->getUser());
     }
 
-    public function handleAuthenticationSuccess(UserInterface $user, $jwt = null)
+    public function handleAuthenticationSuccess(UserInterface $user)
     {
-        if (null === $jwt) {
-            $jwt = $this->jwtManager->create($user);
-        }
+        $jwt = $this->jwtManager->create($user);
 
         $response = new RedirectResponse($this->router->generate('web_secured'));
         $event    = new AuthenticationSuccessEvent(['token' => $jwt], $user, $response);

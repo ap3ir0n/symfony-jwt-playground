@@ -31,8 +31,8 @@ security:
                 check_path:               /web/login
                 username_parameter:       username
                 password_parameter:       password
-                success_handler:          App\Security\Http\Authentication\AuthenticationSuccessHandler
-                failure_handler:          App\Security\Http\Authentication\AuthenticationFailureHandler
+                success_handler:          App\Security\AuthenticationSuccessHandler
+                failure_path:             web_login_check
 
         secured_api:
             pattern:   ^/api/secured
