@@ -22,5 +22,5 @@ Routes are defined in config/routes.yaml. Login can be performed in 2 different 
 
 You can test getting the token with a simple curl command like this (adapt host and port):
 ```bash
-curl -X POST -H "Content-Type: application/json" http://localhost:8000/api/login -d '{"username":"johndoe","password":"test"}'
+curl -X POST -H "Content-Type: application/json" http://localhost:8000/api/login -d '{"username":"john_admin","password":"sicura"}'
 ```
