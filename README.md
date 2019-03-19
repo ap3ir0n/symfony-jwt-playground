@@ -1,3 +1,5 @@
+This is a demo app showing how to configure Symfony framework for JWT authentication through LexikJWTAuthenticationBundle. JWT are used for both REST API and old fashioned controllers. Uniforming the authentication method will help you to easily manage authentication on frontend side. In addition using JWT will allow you to create true stateless REST API.
+
 Installation instructions
 -------------------------
 
