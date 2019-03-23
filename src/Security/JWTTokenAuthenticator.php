@@ -34,15 +34,6 @@ class JWTTokenAuthenticator extends BaseAuthenticator
      */
     private $webFirewallName;
 
-    /**
-     * JWTTokenAuthenticator constructor.
-     * @param RouterInterface $router
-     * @param JWTTokenManagerInterface $jwtManager
-     * @param EventDispatcherInterface $dispatcher
-     * @param TokenExtractorInterface $tokenExtractor
-     * @param string $webLoginRoute
-     * @param string $webFirewallName
-     */
     public function __construct(
         RouterInterface $router,
         JWTTokenManagerInterface $jwtManager,

@@ -16,11 +16,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
-/**
- * AuthenticationSuccessHandler.
- *
- * @author Dev Lexik <dev@lexik.fr>
- */
 class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterface
 {
     use TargetPathTrait;
@@ -48,13 +43,6 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
      */
     private $webDefaultRoute;
 
-    /**
-     * @param JWTTokenManagerInterface $jwtManager
-     * @param EventDispatcherInterface $dispatcher
-     * @param RouterInterface $router
-     * @param string $webFirewallName
-     * @param string $webDefaultRoute
-     */
     public function __construct(
         JWTTokenManagerInterface $jwtManager,
         EventDispatcherInterface $dispatcher,
@@ -70,9 +58,6 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         $this->webDefaultRoute = $webDefaultRoute;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
         /** @var UserInterface $user */
